@@ -1,32 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&family=Dancing+Script&display=swap');
 
-.logo {
-    text-align: center;
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    color: #333333; /* Dark gray color as shown in the image */
-}
-
-.logo span:first-child {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    text-transform: lowercase;
-}
-
-.logo span:last-child {
-    font-family: 'Dancing Script', cursive;
-    font-weight: 400;
-}
-
-header {
-    background-color: #e6a6a6; /* Light pink background as shown in the image */
-    padding: 20px 0;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-    transition: all 0.3s ease;
-}
 :root {
     --bg-color: #f4d2d2;
     --primary-color: #e6a6a6;
@@ -63,22 +36,21 @@ header {
     top: 0;
     z-index: 1000;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.logo {
-    text-align: center;
-    font-size: 2.5em;
-    margin-bottom: 10px;
+.logo img {
+    width: 100px;
 }
 
-.logo span:first-child {
-    font-weight: bold;
-    font-family: 'Roboto', sans-serif;
-}
-
-.logo span:last-child {
-    font-family: 'Sant\'Elia Script', cursive;
-    font-weight: 400;
+.secondary-logo {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    width: 80px; /* Adjust as needed */
+    height: auto;
 }
 
 nav ul {
@@ -158,14 +130,6 @@ nav ul li a {
     border-radius: 4px;
 }
 
-.particle {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 5;
-}
-
 .contact-form input,
 .contact-form textarea {
     width: 100%;
@@ -219,3 +183,4 @@ footer {
         margin: 10px 0;
     }
 }
+
