@@ -1,109 +1,98 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM fully loaded and parsed');
-
-    // Initialize GSAP plugins
-    gsap.registerPlugin(ScrollTrigger);
-    console.log('GSAP plugins registered');
-
-    // Enhanced header animation on scroll
-    gsap.from('header', {
-        duration: 1,
-        y: -100,
-        opacity: 0,
-        ease: "power3.out",
-        scrollTrigger: {
-            trigger: 'header',
-            start: "top top",
-            scrub: true,
-        }
+document.addEventListener('DOMContentLoaded', () => {
+    // Logo Animation
+    const logo = document.getElementById('animated-logo');
+    logo.style.opacity = 0;
+    logo.animate([
+        { opacity: 0, transform: 'scale(0.9)' },
+        { opacity: 1, transform: 'scale(1)' }
+    ], {
+        duration: 1500,
+        fill: 'forwards',
+        easing: 'ease-out'
     });
 
-    // Dynamic gallery population
-    const galleryData = [
-        { src: './images/resim1.jpg', title: 'Artwork 1', description: 'Description of Artwork 1' },
-        { src: './images/resim2.jpg', title: 'Artwork 2', description: 'Description of Artwork 2' },
-        { src: './images/resim3.jpg', title: 'Artwork 3', description: 'Description of Artwork 3' },
-        { src: './images/resim4.jpg', title: 'Artwork 4', description: 'Description of Artwork 4' },
-        { src: './images/resim5.jpg', title: 'Artwork 5', description: 'Description of Artwork 5' },
-    ];
+    // Add subtle pulsing animation after the initial reveal
+    setTimeout(() => {
+        logo.style.animation = 'pulse 2s infinite';
+    }, 1500);
 
-    const gallery = document.querySelector('.gallery');
-    galleryData.forEach((item, index) => {
-        const galleryItem = document.createElement('div');
-        galleryItem.classList.add('gallery-item');
-        galleryItem.innerHTML = `
-            <img src="${item.src}" alt="${item.title}">
-            <h3>${item.title}</h3>
-            <p>${item.description}</p>
-        `;
-        gallery.appendChild(galleryItem);
-        console.log(`Added gallery item ${index + 1}`);
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
     });
 
-    // Parallax effect for hero section
-    gsap.to('.hero-content', {
-        yPercent: -30,
-        ease: "none",
-        scrollTrigger: {
-            trigger: '.hero',
-            start: "top top",
-            scrub: true,
-        }
-    });
-
-    // Gallery items scroll animation
-    gsap.utils.toArray('.gallery-item').forEach((item, index) => {
-        gsap.from(item, {
-            opacity: 0,
-            y: 50,
-            duration: 1,
-            delay: index * 0.1,
-            scrollTrigger: {
-                trigger: item,
-                start: "top 80%",
-                end: "top 20%",
-                scrub: true,
+    // Reveal sections on scroll
+    const sections = document.querySelectorAll('.fullpage-section');
+    const revealSection = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target);
             }
         });
+    };
+
+    const sectionObserver = new IntersectionObserver(revealSection, {
+        root: null,
+        threshold: 0.15,
     });
 
-    // Contact form button click animation
-    document.querySelectorAll('.contact-form button').forEach(button => {
-        button.addEventListener('click', () => {
-            gsap.fromTo(button, 
-                { scale: 1 }, 
-                { scale: 1.1, duration: 0.1, yoyo: true, repeat: 1 }
-            );
+    sections.forEach(section => {
+        sectionObserver.observe(section);
+    });
+
+    // Handle form submission (placeholder functionality)
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! (This is a placeholder action)');
+            form.reset();
         });
-    });
+    }
 
-    // Enhanced particle animation
-    function createMoreParticles() {
-        const particleCount = 50;
+    // Hide/show header on scroll
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+        let st = window.pageYOffset || document.documentElement.scrollTop;
+        if (st > lastScrollTop) {
+            // Scrolling down
+            document.querySelector('header').style.top = '-60px'; // Adjust based on your header height
+        } else {
+            // Scrolling up
+            document.querySelector('header').style.top = '0';
+        }
+        lastScrollTop = st <= 0 ? 0 : st;
+    }, false);
 
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const size = gsap.utils.random(3, 10);
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
+    // Typing effect for About section
+    const aboutText = `Welcome to MinArt, where creativity and imagination take center stage. I am an artist currently living in Erzurum, Turkey, dedicated to designing characters, objects, and places that blend the extraordinary with the everyday. My artistic vision leans toward the surreal—creating worlds and figures that bend reality, provoke thought, and evoke a sense of wonder. My passion lies in exploring the boundaries of what's real and what's possible. I love to create characters with unexpected features, environments that defy the conventional, and objects that hold deeper meanings, all to spark curiosity and engage viewers. Each of my designs is an invitation into a dreamlike realm where the rules of reality are fluid, and creativity knows no bounds. Currently, I am focused on character and world design, with a particular interest in the game industry. I am eager to collaborate with game companies, developers, and storytellers who wish to build captivating, surreal experiences. I aim to create characters that are unique and memorable, objects that add depth to gameplay, and immersive places that players will want to explore endlessly. If you're interested in working with an artist who brings a surreal, imaginative twist to visual storytelling, I'd love to collaborate. Whether it's breathing life into a character, designing unique elements for gameplay, or building entire worlds, I am excited to contribute to projects that push creative boundaries and engage audiences in unexpected ways. Feel free to explore my gallery and see examples of my work. Don't hesitate to get in touch if you're looking for a partner to create something truly extraordinary. Together, we can build experiences that transport people to fascinating, otherworldly places.`;
 
-            const startX = gsap.utils.random(0, window.innerWidth);
-            const startY = gsap.utils.random(0, window.innerHeight);
-            
-            gsap.set(particle, { x: startX, y: startY });
-            document.body.appendChild(particle);
-            
-            gsap.to(particle, {
-                x: `+=${gsap.utils.random(-100, 100)}`,
-                y: `+=${gsap.utils.random(-100, 100)}`,
-                duration: gsap.utils.random(5, 10),
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut"
-            });
+    const typedTextElement = document.getElementById('typed-text');
+    let index = 0;
+
+    function typeText() {
+        if (index < aboutText.length) {
+            typedTextElement.textContent += aboutText.charAt(index);
+            index++;
+            setTimeout(typeText, 20); // Adjust typing speed here
         }
     }
 
-    createMoreParticles();
+    // Start typing when About section is in view
+    const aboutSection = document.getElementById('about');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && index === 0) {
+                typeText();
+            }
+        });
+    }, { threshold: 0.5 });
+
+    observer.observe(aboutSection);
 });
